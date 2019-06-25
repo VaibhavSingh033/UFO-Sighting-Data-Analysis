@@ -1,4 +1,5 @@
-#UFO Sightings around the world
+
+#UFO_Sighting around the world
 
 This data includes >80,000 recorded UFO "sightings" around the world, including the UFO shape, lat/long and state/country of where the sighting occurred, duration of the "event" and the data_time when it occurred.
 
