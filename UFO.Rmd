@@ -1,0 +1,74 @@
+---
+title: "UFO Sighting -"
+author: "Vaibhav"
+date: "6/25/2019"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(scales)
+library(gridExtra)
+library(gganimate)
+
+ufo_sightings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-25/ufo_sightings.csv") %>% mutate(date_time=mdy_hm(date_time), date_documented=mdy(date_documented))
+
+ufo_sightings <- ufo_sightings %>% mutate(year=year(date_time), year_documeted=year(date_documented))
+
+head(ufo_sightings)
+```
+
+
+Year of maximum UFO sighting 
+```{r}
+
+g1 <- ggplot(ufo_sightings, aes(year))+geom_histogram()+labs(title="UFO Sighting Date", x="",y="")
+
+#Documented year of UFO Sighting
+
+g2 <- ggplot(ufo_sightings, aes(year_documeted))+geom_histogram()+labs(title="UFO Documenting Date", x="",y="")
+
+grid.arrange(g1,g2, ncol=2)
+
+```
+
+
+
+```{r}
+p1<- ggplot() + 
+  borders("world", colour = "#ede3e3", fill = "#232323") +
+  theme_map(base_family = "Merriweather") +
+  coord_map(projection = "mercator", orientation = c(90, 0, 0)) +
+  geom_point(data = ufo_sightings,color="#dce222",
+             aes(x = longitude, y = latitude, alpha = .7))  +
+  transition_time(year) +
+#  ease_aes('linear')+
+  scale_size_continuous(name = "Mass", range = c(1, 20), labels = comma_format()) +
+  theme(legend.position = "none") +
+  theme(plot.title = element_text(color = "red", hjust = 0.5, size = 20,
+                              face = "bold"),
+    plot.subtitle = element_text(color = "white", hjust = 0.5, size = 15, face = "italic"),
+    plot.caption = element_text(color = "white", size = 6),
+    plot.background = element_rect(fill = "#1D1B1C"),
+    panel.background = element_rect(fill = "#1D1B1C", color = "#1D1B1C"),
+    plot.margin = unit(c(0.25, 0.25, 0.25, 0.25), "cm")) +
+  labs(title = "UFO Sightings across the world since 1900's",
+    subtitle = "Year: {round(frame_time,0)}",
+     caption = "Year Wise ") 
+#+
+  # annotate("text", x = -170, y = -60 , color = "#f1f1f1", hjust = 0,
+  #          fontface = "italic", size = 3, family = "Merriweather") 
+
+animate(p1,102,3)
+
+  ggsave("UFO.png", width = 15, height = 8)
+```
+
+
+```{r}
+
+
+```
+
